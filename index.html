@@ -3,8 +3,12 @@
 <head>
   <meta charset="utf-8">
   <title>Precision Aspect Grid</title>
+  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+  <!-- Tailwind is now handled by the build process, but we keep the CDN for preview safety. 
+       In a real production build, you should install tailwindcss via npm and use the styles.css file. 
+       For this quick deployment fix, keeping CDN is acceptable, though npm is better. -->
   <script src="https://cdn.tailwindcss.com"></script>
 <script type="importmap">
 {
@@ -15,9 +19,9 @@
     "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
     "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
     "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
-    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.3?external=rxjs",
-    "@angular/core": "https://esm.sh/@angular/core@^21.1.3?external=rxjs",
-    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.3?external=rxjs"
+    "@angular/core": "https://esm.sh/@angular/core@^21.1.4?external=rxjs",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.4?external=rxjs",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.4?external=rxjs"
   }
 }
 </script>
