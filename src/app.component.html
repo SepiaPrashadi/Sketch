@@ -1,0 +1,116 @@
+<div class="flex flex-col min-h-screen bg-white text-black px-4 md:px-12 pt-[24px] pb-[48px] font-['Fira_Code',monospace] selection:bg-black selection:text-white">
+      
+  <main #mainContainer class="w-full relative flex-grow">
+    
+    <!-- CONTROL DECK -->
+    <div class="w-full border-b border-black/10 mb-8 pb-4 flex flex-col md:flex-row md:items-center justify-end gap-4 select-none text-[15px] font-normal">
+       <div class="flex items-center gap-2">
+          <span class="text-black/50 mr-2">Aspect_Mod:</span>
+          <button 
+            (click)="setFilterRatio('ALL')" 
+            [class]="filterRatio() === 'ALL' ? 'bg-black text-white px-2 py-1' : 'text-black/50 hover:text-black px-2 py-1 transition-colors'">All</button>
+          <span class="text-black/30">/</span>
+          <button 
+            (click)="setFilterRatio('SQUARE')" 
+            [class]="filterRatio() === 'SQUARE' ? 'bg-black text-white px-2 py-1' : 'text-black/50 hover:text-black px-2 py-1 transition-colors'">1:1</button>
+          <span class="text-black/30">/</span>
+          <button 
+            (click)="setFilterRatio('LANDSCAPE')" 
+            [class]="filterRatio() === 'LANDSCAPE' ? 'bg-black text-white px-2 py-1' : 'text-black/50 hover:text-black px-2 py-1 transition-colors'">16:9</button>
+       </div>
+    </div>
+
+    <!-- ZIG-ZAG PATH LAYER (Hidden when filtered) -->
+    @if (!isFiltering()) {
+      <svg 
+        class="absolute inset-0 w-full pointer-events-none z-0 overflow-visible"
+        [style.height.px]="totalHeight()"
+        [attr.viewBox]="'0 0 100 ' + (totalHeight() || 100)"
+        preserveAspectRatio="none">
+        <polyline
+          [attr.points]="pathPoints()"
+          fill="none"
+          stroke="#000000"
+          stroke-width="1"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+    }
+
+    <!-- The Content Grid -->
+    <div class="grid grid-cols-4 gap-x-4 md:gap-x-8 gap-y-16 items-start relative z-10">
+      
+      @for (item of galleryItems(); track item.id) {
+        @if (item.isEmpty) {
+          <div [id]="'node-' + item.id" [class]="'hidden md:block h-1 ' + item.gridClass"></div>
+        } @else {
+          <div 
+            [id]="'node-' + item.id"
+            [class]="'relative flex flex-col group ' + (isMobile() ? (item.mobileGridClass || 'col-span-4') : item.gridClass)"
+            [style.marginTop.px]="item.displayOffset"
+            [class.fixed-top-left]="item.id === 'a' && !isFiltering()">
+            
+            @if (!item.isText && (item.title || !item.hideMetadata)) {
+              <div class="mb-2 flex justify-between items-end">
+                <span class="bg-white pl-[12px] pr-[12px] pt-[9px] pb-[11px] text-[15px] text-black font-normal leading-none">
+                  {{ item.title }}
+                </span>
+                @if (!item.hideMetadata) {
+                  <span class="bg-white pl-[12px] pr-[12px] pt-[9px] pb-[11px] ml-2 text-[15px] text-black/50 italic leading-none">
+                    {{ item.customMetadata || (item.nativeWidth + 'x' + item.nativeHeight) }}
+                  </span>
+                }
+              </div>
+            }
+
+            <div 
+              class="relative overflow-hidden flex items-center justify-center transition-all duration-500"
+              [class]="item.isText ? 'bg-black' : 'bg-white'"
+              [style.width.px]="item.displayWidth"
+              [style.height.px]="item.displayHeight">
+              
+              @if (item.isText) {
+                <div class="text-white text-left font-medium px-4 md:px-8 w-full leading-tight select-none"
+                     [style.fontSize.px]="isMobile() ? item.scale * 32 : item.scale * 48">
+                  {{ item.title }}
+                </div>
+              } @else {
+                <div 
+                  class="relative origin-center overflow-hidden flex items-center justify-center shrink-0"
+                  [style.width.px]="item.nativeWidth"
+                  [style.height.px]="item.nativeHeight"
+                  [style.transform]="'scale(' + item.scale + ')'">
+                  
+                  <div class="absolute inset-0 flex items-center justify-center bg-slate-50/80 z-0">
+                    <div class="w-4 h-4 border-2 border-black/10 border-t-black rounded-full animate-spin"></div>
+                  </div>
+
+                  <div 
+                    class="absolute z-10 overflow-hidden"
+                    [style.top.px]="-navbarOffset"
+                    [style.left.px]="-10"
+                    [style.width.px]="item.nativeWidth + 20"
+                    [style.height.px]="item.nativeHeight + navbarOffset + 20">
+                    
+                    <iframe
+                      [src]="item.safeUrl"
+                      class="w-full h-full border-0 block"
+                      scrolling="no"
+                      loading="lazy">
+                    </iframe>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+
+    </div>
+  </main>
+
+  <footer class="w-full mt-32 border-t border-black/10 pt-8 flex justify-between text-black/50 text-[15px] font-normal shrink-0">
+    <span>Precision Aspect Grid / Path-Fixed</span>
+    <span>2026</span>
+  </footer>
+</div>
