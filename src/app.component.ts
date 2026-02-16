@@ -1,5 +1,6 @@
 import { Component, computed, ChangeDetectionStrategy, inject, signal, HostListener, OnInit, ElementRef, viewChild, AfterViewInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { P5SketchComponent } from './p5-sketch.component';
 
 interface ArtSketch {
   id: string;
@@ -20,7 +21,9 @@ type FilterRatio = 'ALL' | 'SQUARE' | 'LANDSCAPE';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   templateUrl: './app.component.html',
+  imports: [P5SketchComponent],
   styles: [`
     :host { display: block; }
     .animate-spin { animation: spin 1s linear infinite; }
@@ -43,6 +46,39 @@ type FilterRatio = 'ALL' | 'SQUARE' | 'LANDSCAPE';
 })
 export class App implements OnInit, AfterViewInit {
   private sanitizer = inject(DomSanitizer);
+
+  // P5.js sketch for Red and Blue
+  readonly sketchC = (p: any) => {
+    p.setup = () => {
+      p.background(255, 48, 190);
+    };
+
+    p.draw = () => {
+      p.stroke(242, 63, 190);
+      p.strokeWeight(12);
+      p.line(p.mouseX+4, p.mouseY+4, p.mouseX, p.mouseY);
+
+      p.strokeWeight(2);
+      p.stroke(255, 137, 87);
+      p.line(p.mouseX+4, p.mouseY+8, p.width/1.7, p.height/1.7, 0, 0);
+
+      p.strokeWeight(12);
+      p.line(p.mouseX+4, p.mouseY+4, p.mouseX+4, p.mouseY+4);
+
+      p.stroke(242, 63, 149);
+      p.strokeWeight(1);
+      p.line(p.mouseX, p.mouseY, p.width/1.7, p.height/1.7, 0, 0);
+      p.strokeWeight(8);
+      p.stroke(255, 0, 0);
+      p.line(p.mouseX+2, p.mouseY+2, p.mouseX+2, p.mouseY+2);
+
+      p.stroke(81, 232, 243);
+      p.strokeWeight(2);
+      p.line(600, p.height, p.width/1.7, p.mouseY, 0, 0);
+      p.strokeWeight(4);
+      p.line(p.mouseX, p.mouseY, p.mouseX, p.mouseY);
+    };
+  };
   
   // Using viewChild signal for Angular 17+
   mainContainer = viewChild<ElementRef<HTMLElement>>('mainContainer');

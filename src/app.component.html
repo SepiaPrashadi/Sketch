@@ -91,13 +91,17 @@
                     [style.left.px]="-10"
                     [style.width.px]="item.nativeWidth + 20"
                     [style.height.px]="item.nativeHeight + navbarOffset + 20">
-                    
-                    <iframe
-                      [src]="item.safeUrl"
-                      class="w-full h-full border-0 block"
-                      scrolling="no"
-                      loading="lazy">
-                    </iframe>
+
+                      @if (item.id === 'c' || item.id === 'b') {
+                          <app-p5-sketch [sketch]="sketchC" [width]="item.nativeWidth" [height]="item.nativeHeight"></app-p5-sketch>
+                      } @else {
+                          <iframe
+                                  [src]="item.safeUrl"
+                                  class="w-full h-full border-0 block"
+                                  scrolling="no"
+                                  loading="lazy">
+                          </iframe>
+                      }
                   </div>
                 </div>
               }
